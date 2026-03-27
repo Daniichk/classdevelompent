@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLASS.DEV | Engineering the Future of School Gaming</title>
+    <title>CLASS.DEV | Liquid Engineering</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
-            --card-bg: #111111;
-            --accent: #3b82f6;
+            --bg: #000000;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #60a5fa;
             --text: #ffffff;
-            --text-dim: #a1a1aa;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,12 +19,58 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Hero Section */
+        /* Анимированный жидкий фон */
+        .liquid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob.two {
+            background: linear-gradient(135deg, #4c1d95 0%, #8b5cf6 100%);
+            width: 400px;
+            height: 400px;
+            right: 10%;
+            animation-duration: 15s;
+            animation-delay: -5s;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%) rotate(0deg); }
+            to { transform: translate(20%, 20%) rotate(360deg); }
+        }
+
+        /* Контент */
+        .glass-nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 25px 50px;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-weight: 800; letter-spacing: 2px; font-size: 1.2rem; }
+
         header {
             height: 100vh;
             display: flex;
@@ -32,171 +78,162 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-        }
-
-        .logo {
-            font-weight: 900;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            color: var(--accent);
+            padding: 20px;
         }
 
         h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 0.9;
-            margin-bottom: 1.5rem;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 800;
+            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 20px;
         }
 
-        .hero-sub {
-            color: var(--text-dim);
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 2.5rem;
+        .hero-tag {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        /* Project Grid */
+        /* Стеклянные карточки */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 100px 20px;
         }
 
-        .section-label {
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            color: var(--accent);
-            margin-bottom: 40px;
-            display: block;
-        }
-
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
         }
 
-        .card {
-            background: var(--card-bg);
-            padding: 40px;
-            border: 1px solid #222;
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        /* Info Section */
-        .mission {
-            border-top: 1px solid #222;
-            padding: 100px 0;
-            text-align: left;
-        }
-
-        .stats {
-            display: flex;
-            gap: 50px;
-            margin-top: 40px;
-        }
-
-        .stat-item h4 { font-size: 2rem; color: var(--text); }
-        .stat-item span { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; }
-
-        footer {
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
             padding: 50px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #444;
-            border-top: 1px solid #111;
+            border-radius: 30px;
+            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn {
-            padding: 15px 35px;
-            background: white;
-            color: black;
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .glass-card:hover::before { left: 100%; }
+
+        .glass-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .glass-card h3 { font-size: 2rem; margin-bottom: 15px; font-weight: 800; }
+        .glass-card p { color: #ccc; font-weight: 300; font-size: 1.1rem; }
+
+        .btn-main {
+            margin-top: 40px;
+            padding: 20px 50px;
+            background: #fff;
+            color: #000;
+            border-radius: 100px;
             text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            font-weight: 800;
+            font-size: 0.9rem;
             transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
         }
 
-        .btn:hover {
-            background: var(--accent);
-            color: white;
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
         }
+
+        .stats-grid {
+            margin-top: 100px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 50px;
+        }
+
+        .stat h2 { font-size: 3rem; font-weight: 800; color: var(--accent); }
+        .stat span { text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; color: #777; }
+
     </style>
 </head>
 <body>
 
+    <div class="liquid-bg">
+        <div class="blob"></div>
+        <div class="blob two"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="logo">CLASS.DEV</div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">EST. 2024 / INDEPENDENT STUDIO</div>
+    </nav>
+
     <header>
-        <div class="logo">class.dev</div>
-        <h1>PURE GAMING.<br>NO DISTRACTIONS.</h1>
-        <p class="hero-sub">The premier game development studio founded by students, for students. Built for high performance, designed for the classroom.</p>
-        <a href="#games" class="btn">View Collection</a>
+        <div class="hero-tag">A New Era of Digital Entertainment</div>
+        <h1>Liquid Power.<br>Pure Play.</h1>
+        <p style="max-width: 600px; color: #888; font-size: 1.2rem; margin-bottom: 40px;">
+            We build high-performance gaming experiences for the next generation of students. 
+            No corporate overhead. No investors. Just pure code.
+        </p>
+        <a href="#explore" class="btn-main">Enter the Ecosystem</a>
     </header>
 
-    <div class="container" id="games">
-        <span class="section-label">Active Portfolio</span>
+    <div class="container" id="explore">
         <div class="grid">
-            <div class="card">
+            <div class="glass-card">
                 <h3>Llama Clicker</h3>
-                <p>The ultimate addictive idle experience. Optimized for school networks and endless engagement.</p>
+                <p>The industry-leading idle simulator. Built with optimized physics for seamless school-time engagement.</p>
             </div>
-            <div class="card">
-                <h3>Brawl Stars Alpha</h3>
-                <p>A precision-engineered web tribute to the competitive classic. Fast-paced action in your browser.</p>
+            <div class="glass-card">
+                <h3>Brawl Alpha</h3>
+                <p>A high-fidelity competitive tribute. Low latency, high impact, fully accessible through the browser.</p>
             </div>
-            <div class="card">
-                <h3>Project Unknown</h3>
-                <p>Under heavy development. Next-gen mechanics coming soon to class.dev.</p>
+            <div class="glass-card">
+                <h3 style="color: #666;">Top Secret</h3>
+                <p>Advanced mechanics currently in alpha testing. Deployment scheduled for Q3 2024.</p>
             </div>
         </div>
 
-        <div class="mission">
-            <span class="section-label">Corporate Intelligence</span>
-            <h2>Independence is our power.</h2>
-            <p class="hero-sub">0% Investor influence. 100% Student focused. We are two 13-year-old engineers redefining what "browser gaming" means.</p>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <h4>2</h4>
-                    <span>Lead Developers</span>
-                </div>
-                <div class="stat-item">
-                    <h4>0</h4>
-                    <span>External Funding</span>
-                </div>
-                <div class="stat-item">
-                    <h4>100%</h4>
-                    <span>Uptime</span>
-                </div>
+        <div class="stats-grid">
+            <div class="stat">
+                <h2>13</h2>
+                <span>Developer Age</span>
+            </div>
+            <div class="stat">
+                <h2>0$</h2>
+                <span>VC Funding</span>
+            </div>
+            <div class="stat">
+                <h2>2</h2>
+                <span>Active Projects</span>
             </div>
         </div>
     </div>
 
-    <footer>
-        &copy; 2024 CLASS.DEV EST. — ALL RIGHTS RESERVED.
+    <footer style="text-align: center; padding: 100px 0 50px; opacity: 0.3; font-size: 0.7rem;">
+        OPERATED BY CLASS.DEV // BUILT FOR THE SCHOOL ECOSYSTEM
     </footer>
 
 </body>
