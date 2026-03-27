@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLASS.DEV | Liquid Engineering</title>
+    <title>CLASS.DEV | Next-Gen Gaming Studio</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root {
@@ -24,39 +24,57 @@
             min-height: 100vh;
         }
 
-        /* Анимированный жидкий фон */
+        /* 1. PRELOADER ANIMATION */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out;
+        }
+        .preloader-content {
+            font-weight: 800;
+            letter-spacing: 10px;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 2. LIQUID BACKGROUND */
         .liquid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             filter: blur(80px);
-            opacity: 0.6;
+            opacity: 0.5;
         }
-
         .blob {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             border-radius: 50%;
-            animation: move 20s infinite alternate;
+            animation: move 25s infinite alternate ease-in-out;
         }
-
         .blob.two {
             background: linear-gradient(135deg, #4c1d95 0%, #8b5cf6 100%);
-            width: 400px;
-            height: 400px;
-            right: 10%;
-            animation-duration: 15s;
-            animation-delay: -5s;
+            width: 500px; height: 500px;
+            right: -10%; top: 20%;
+            animation-duration: 18s;
+            animation-delay: -7s;
         }
-
         @keyframes move {
             from { transform: translate(-10%, -10%) rotate(0deg); }
-            to { transform: translate(20%, 20%) rotate(360deg); }
+            to { transform: translate(30%, 20%) rotate(360deg); }
         }
 
-        /* Контент */
+        /* NAVIGATION */
         .glass-nav {
             position: fixed;
             top: 0; width: 100%;
@@ -68,9 +86,9 @@
             justify-content: space-between;
             align-items: center;
         }
+        .logo { font-weight: 800; letter-spacing: 2px; }
 
-        .logo { font-weight: 800; letter-spacing: 2px; font-size: 1.2rem; }
-
+        /* HERO SECTION */
         header {
             height: 100vh;
             display: flex;
@@ -78,107 +96,101 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
+            perspective: 1000px;
         }
-
         h1 {
             font-size: clamp(3.5rem, 10vw, 7rem);
             font-weight: 800;
-            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.4));
+            background: linear-gradient(to bottom, #fff 50%, rgba(255,255,255,0.2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
             margin-bottom: 20px;
+            opacity: 0; transform: translateY(30px);
+            animation: reveal 1s forwards 1.2s;
+        }
+        @keyframes reveal {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero-tag {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 8px 20px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Стеклянные карточки */
+        /* GRID & CARDS */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 100px 20px;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 40px;
         }
 
+        /* 3. 3D GLASS CARDS */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             padding: 50px;
-            border-radius: 30px;
-            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-radius: 35px;
             position: relative;
             overflow: hidden;
+            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transform-style: preserve-3d;
         }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .glass-card:hover::before { left: 100%; }
-
         .glass-card:hover {
-            transform: scale(1.02);
             border-color: rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        .glass-card h3 { font-size: 2rem; margin-bottom: 15px; font-weight: 800; }
-        .glass-card p { color: #ccc; font-weight: 300; font-size: 1.1rem; }
+        .status-dot {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #22c55e;
+        }
 
-        .btn-main {
-            margin-top: 40px;
-            padding: 20px 50px;
+        .glass-card h3 { font-size: 2.2rem; margin-bottom: 15px; transform: translateZ(30px); }
+        .glass-card p { color: #888; margin-bottom: 30px; transform: translateZ(20px); }
+
+        .btn-play {
             background: #fff;
             color: #000;
+            padding: 12px 30px;
             border-radius: 100px;
             text-decoration: none;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            display: inline-block;
             transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
         }
+        .btn-play:hover { transform: scale(1.1); background: var(--accent); color: #fff; }
 
-        .btn-main:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
-        }
+        .locked { opacity: 0.4; pointer-events: none; }
 
+        /* FOOTER STATS */
         .stats-grid {
             margin-top: 100px;
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
             border-top: 1px solid var(--glass-border);
             padding-top: 50px;
         }
-
-        .stat h2 { font-size: 3rem; font-weight: 800; color: var(--accent); }
-        .stat span { text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; color: #777; }
+        .stat h2 { font-size: 3.5rem; color: var(--accent); }
+        .stat span { font-size: 0.7rem; letter-spacing: 2px; color: #555; }
 
     </style>
 </head>
 <body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-content">CLASS.DEV</div>
+    </div>
 
     <div class="liquid-bg">
         <div class="blob"></div>
@@ -187,54 +199,94 @@
 
     <nav class="glass-nav">
         <div class="logo">CLASS.DEV</div>
-        <div style="font-size: 0.8rem; opacity: 0.5;">EST. 2024 / INDEPENDENT STUDIO</div>
+        <div style="font-size: 0.7rem; opacity: 0.4;">NO INVESTORS // 100% INDEPENDENT</div>
     </nav>
 
     <header>
-        <div class="hero-tag">A New Era of Digital Entertainment</div>
-        <h1>Liquid Power.<br>Pure Play.</h1>
-        <p style="max-width: 600px; color: #888; font-size: 1.2rem; margin-bottom: 40px;">
-            We build high-performance gaming experiences for the next generation of students. 
-            No corporate overhead. No investors. Just pure code.
-        </p>
-        <a href="#explore" class="btn-main">Enter the Ecosystem</a>
+        <div class="hero-tag" style="font-size: 0.7rem; letter-spacing: 4px; opacity: 0.6; margin-bottom: 20px;">ESTABLISHED 2024</div>
+        <h1>Liquid Game<br>Engineering.</h1>
+        <p style="color: #666; max-width: 500px; margin-top: 20px;">High-performance browser experiences developed by students for the classroom ecosystem.</p>
     </header>
 
-    <div class="container" id="explore">
+    <div class="container" id="content">
         <div class="grid">
-            <div class="glass-card">
+            <!-- Llama Clicker - Active -->
+            <div class="glass-card tilt" data-tilt>
+                <div class="status-dot">Online</div>
                 <h3>Llama Clicker</h3>
-                <p>The industry-leading idle simulator. Built with optimized physics for seamless school-time engagement.</p>
+                <p>The premium idle experience optimized for school networks. Build your empire.</p>
+                <a href="https://eyesthatdonotsee.vercel.app" class="btn-play">Launch Environment</a>
             </div>
-            <div class="glass-card">
+
+            <!-- Brawl Alpha - Beta -->
+            <div class="glass-card tilt" data-tilt>
+                <div class="status-dot" style="background: #fbbf24;">Beta</div>
                 <h3>Brawl Alpha</h3>
-                <p>A high-fidelity competitive tribute. Low latency, high impact, fully accessible through the browser.</p>
+                <p>Advanced competitive mechanics in a glass-morphic web interface.</p>
+                <span class="btn-play locked">System Locked</span>
             </div>
-            <div class="glass-card">
-                <h3 style="color: #666;">Top Secret</h3>
-                <p>Advanced mechanics currently in alpha testing. Deployment scheduled for Q3 2024.</p>
+
+            <!-- Secret Project -->
+            <div class="glass-card tilt" data-tilt>
+                <div class="status-dot" style="background: #444;">Encrypted</div>
+                <h3 style="color: #444;">Project X</h3>
+                <p>Classified development in progress. Arrival scheduled for late 2024.</p>
+                <span class="btn-play locked">Unauthorized</span>
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat">
                 <h2>13</h2>
-                <span>Developer Age</span>
+                <span>DEV AGE</span>
             </div>
             <div class="stat">
                 <h2>0$</h2>
-                <span>VC Funding</span>
+                <span>VC FUNDING</span>
             </div>
             <div class="stat">
                 <h2>2</h2>
-                <span>Active Projects</span>
+                <span>ENGINEERS</span>
             </div>
         </div>
     </div>
 
-    <footer style="text-align: center; padding: 100px 0 50px; opacity: 0.3; font-size: 0.7rem;">
-        OPERATED BY CLASS.DEV // BUILT FOR THE SCHOOL ECOSYSTEM
+    <footer style="text-align: center; padding: 50px; opacity: 0.2; font-size: 0.6rem; letter-spacing: 2px;">
+        © 2024 CLASS.DEV ENGINEERING UNIT. ALL RIGHTS RESERVED.
     </footer>
 
+    <!-- SCRIPTS FOR ANIMATIONS -->
+    <script>
+        // 1. Hide Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 1000);
+            }, 1500);
+        });
+
+        // 2. 3D Tilt Effect
+        const cards = document.querySelectorAll('.tilt');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+    </script>
 </body>
 </html>
