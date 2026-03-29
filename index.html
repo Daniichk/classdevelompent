@@ -18,14 +18,21 @@
         body {
             margin: 0; background: var(--bg); color: #fff;
             font-family: 'Inter', sans-serif; overflow-x: hidden;
+            /* Убираем стандартный курсор для лучшего эффекта, если хочешь */
         }
 
-        /* Liquid Glass Background */
+        /* Gravity Canvas */
+        #canvas-bg {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+
         #liquid-blob {
-            position: fixed; width: 900px; height: 900px;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.1) 0%, rgba(0,0,0,0) 70%);
-            filter: blur(120px); z-index: -1; pointer-events: none;
-            transform: translate(-50%, -50%); transition: 0.2s ease-out;
+            position: fixed; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px); z-index: -2; pointer-events: none;
+            transform: translate(-50%, -50%); transition: 0.1s ease-out;
         }
 
         nav {
@@ -41,43 +48,40 @@
 
         h1 {
             font-size: clamp(4rem, 12vw, 8.5rem); font-weight: 900; line-height: 0.85;
-            letter-spacing: -6px; margin: 0; opacity: 0; transform: translateY(80px);
-            transition: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -6px; margin: 0; opacity: 0; transform: translateY(80px) rotateX(-20deg);
+            transition: 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            perspective: 1000px;
         }
 
-        /* Rules Matrix Section */
         .matrix-section { padding: 120px 10%; border-top: 1px solid var(--border); }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 60px; }
         
         .card {
             background: var(--glass); border: 1px solid var(--border); padding: 50px 40px;
-            border-radius: 40px; backdrop-filter: blur(40px); transition: 0.5s;
+            border-radius: 40px; backdrop-filter: blur(40px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             opacity: 0; transform: translateY(40px);
         }
-        .card:hover { transform: scale(1.02); border-color: var(--accent); background: rgba(255,255,255,0.06); }
-        .card h3 { color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 20px; }
-        .card h2 { font-size: 2rem; margin: 0 0 15px 0; letter-spacing: -1px; }
-
-        /* Action Section */
-        .action-section {
-            text-align: center; padding: 150px 10%; background: #050505;
-        }
+        .card:hover { transform: scale(1.05) translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        
+        .action-section { text-align: center; padding: 150px 10%; background: transparent; }
 
         .deploy-trigger {
             background: #fff; color: #000; padding: 25px 80px;
             border-radius: 100px; font-weight: 900; text-transform: uppercase;
             border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             font-size: 0.9rem; letter-spacing: 2px;
+            position: relative; overflow: hidden;
         }
-        .deploy-trigger:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(0, 113, 227, 0.4); background: var(--accent); color: #fff; }
+        .deploy-trigger:hover { transform: scale(1.1); box-shadow: 0 0 50px rgba(0, 113, 227, 0.6); background: var(--accent); color: #fff; }
 
-        .revealed { opacity: 1 !important; transform: translateY(0) !important; }
+        .revealed { opacity: 1 !important; transform: translateY(0) rotateX(0) !important; }
 
         footer { padding: 80px 10%; color: #333; font-size: 0.75rem; text-align: center; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
+<canvas id="canvas-bg"></canvas>
 <div id="liquid-blob"></div>
 
 <nav id="navbar">
@@ -99,12 +103,12 @@
         <div class="card">
             <h3>Protocol 01</h3>
             <h2>Individual<br>Sovereignty</h2>
-            <p style="color: var(--text-dim);">This is a solo engagement. Any evidence of unauthorized collaboration results in immediate project termination.</p>
+            <p style="color: var(--text-dim);">This is a solo engagement. Любое доказательство несанкционированного сотрудничества ведет к терминации проекта.</p>
         </div>
         <div class="card">
             <h3>Protocol 02</h3>
             <h2>Original<br>Invention</h2>
-            <p style="color: var(--text-dim);">Avoid replication. Your logic must be unique. Even clones of existing systems must feature a "Vibe-Code" mechanical overhaul.</p>
+            <p style="color: var(--text-dim);">Avoid replication. Your logic must be unique. Even clones of existing systems must feature a "Vibe-Code" overhaul.</p>
         </div>
         <div class="card">
             <h3>Protocol 03</h3>
@@ -129,23 +133,95 @@
 </footer>
 
 <script>
+    // --- Gravity & Particle Engine ---
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const mouse = { x: -100, y: -100 };
+
+    window.onresize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    window.onresize();
+
+    class Particle {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.accX = 0;
+            this.accY = 0;
+            this.friction = 0.96;
+        }
+        update() {
+            // Гравитация к курсору
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if (dist < 300) {
+                let force = (300 - dist) / 3000;
+                this.accX = dx * force;
+                this.accY = dy * force;
+            } else {
+                this.accX = 0;
+                this.accY = 0;
+            }
+
+            this.vx += this.accX;
+            this.vy += this.accY;
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Отражение от границ
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+            ctx.fillStyle = 'rgba(0, 113, 227, 0.4)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 150; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    // --- Common Functions ---
     const blob = document.getElementById('liquid-blob');
     const heroTitle = document.getElementById('hero-title');
     const heroDesc = document.getElementById('hero-desc');
 
-    // 1. Initial Animations
     window.onload = () => {
         heroTitle.classList.add('revealed');
         heroDesc.classList.add('revealed');
     };
 
-    // 2. Liquid Glass Mouse Tracking
     window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
         blob.style.left = e.clientX + 'px';
         blob.style.top = e.clientY + 'px';
     });
 
-    // 3. Scroll Reveal for Cards
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('revealed');
@@ -154,34 +230,29 @@
 
     document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
-    // 4. Transmission Logic
     function transmitProject() {
         const email = "daniil.derzhakov@alu.escuelassj.com";
         const subject = "HACKATHON DEPLOYMENT: Project Final Submission";
         const body = "CHIEF ARCHITECT,\n\nI am submitting my original, single-file project for technical review.\n\nPROJECT ATTACHMENT STATUS: [Please attach your .html file to this email]\n\nSUBMITTED BY: [Enter Your Name]";
-    
-    // Создаем прямую ссылку mailto (самый надежный способ)
+        
         const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    // Создаем невидимый элемент <a> для обхода блокировок всплывающих окон
+        
         const link = document.createElement('a');
         link.href = mailtoUrl;
         link.style.display = 'none';
         document.body.appendChild(link);
-    
-    // Эффект нажатия на кнопку (визуальный фидбек)
+        
         const btn = document.querySelector('.deploy-trigger');
         btn.style.transform = "scale(0.95)";
         btn.innerText = "OPENING GMAIL...";
-    
+        
         setTimeout(() => {
-            link.click(); // Симуляция клика
+            link.click();
             document.body.removeChild(link);
             btn.style.transform = "scale(1)";
             btn.innerText = "TRANSMIT RESULT";
         }, 500);
     }
-
 </script>
 
 </body>
