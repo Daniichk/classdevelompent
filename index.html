@@ -157,14 +157,31 @@
     // 4. Transmission Logic
     function transmitProject() {
         const email = "daniil.derzhakov@alu.escuelassj.com";
-        const subject = encodeURIComponent("HACKATHON DEPLOYMENT: Project Final Submission");
-        const body = encodeURIComponent("CHIEF ARCHITECT,\n\nI am submitting my original, single-file project for technical review.\n\nPROJECT ATTACHMENT STATUS: [Please attach your .html file to this email]\n\nSUBMITTED BY: [Enter Your Name]");
-        
-        const gmailUrl = `https://mail.google.com{email}&su=${subject}&body=${body}`;
-        
-        // Прямое открытие Gmail в новой вкладке
-        window.open(gmailUrl, '_blank');
+        const subject = "HACKATHON DEPLOYMENT: Project Final Submission";
+        const body = "CHIEF ARCHITECT,\n\nI am submitting my original, single-file project for technical review.\n\nPROJECT ATTACHMENT STATUS: [Please attach your .html file to this email]\n\nSUBMITTED BY: [Enter Your Name]";
+    
+    // Создаем прямую ссылку mailto (самый надежный способ)
+        const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Создаем невидимый элемент <a> для обхода блокировок всплывающих окон
+        const link = document.createElement('a');
+        link.href = mailtoUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+    
+    // Эффект нажатия на кнопку (визуальный фидбек)
+        const btn = document.querySelector('.deploy-trigger');
+        btn.style.transform = "scale(0.95)";
+        btn.innerText = "OPENING GMAIL...";
+    
+        setTimeout(() => {
+            link.click(); // Симуляция клика
+            document.body.removeChild(link);
+            btn.style.transform = "scale(1)";
+            btn.innerText = "TRANSMIT RESULT";
+        }, 500);
     }
+
 </script>
 
 </body>
