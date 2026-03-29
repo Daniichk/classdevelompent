@@ -6,7 +6,7 @@
     <title>School Flow | Enterprise Edition</title>
     <style>
         :root {
-            --accent: #4F46E5; /* Indigo Premium */
+            --accent: #4F46E5; 
             --text-primary: #111827;
             --text-secondary: #6B7280;
             --card-bg: rgba(255, 255, 255, 0.7);
@@ -16,15 +16,12 @@
 
         body {
             margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-            
-            /* Gradiente Animado Estilo Stripe */
             background: linear-gradient(-45deg, #EEF2FF, #E0E7FF, #C7D2FE, #DBEAFE);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -46,7 +43,7 @@
 
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 32px;
             padding: 40px 30px;
@@ -61,13 +58,12 @@
             border-radius: 100px;
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
-            margin-bottom: 20px;
             text-transform: uppercase;
+            margin-bottom: 20px;
         }
 
         #subject-name {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             font-weight: 600;
             margin: 0;
             color: var(--text-primary);
@@ -85,19 +81,18 @@
         .status-label {
             font-size: 0.9rem;
             color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        /* Sección de Clases de Hoy */
         .today-schedule {
             text-align: left;
             border-top: 1px solid rgba(0,0,0,0.05);
             padding-top: 20px;
+            margin-bottom: 20px;
         }
 
         .today-title {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -108,16 +103,15 @@
         .class-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .class-tag {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             padding: 4px 10px;
             background: rgba(0,0,0,0.04);
             border-radius: 8px;
-            color: var(--text-primary);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .class-tag.active {
@@ -125,14 +119,30 @@
             color: white;
         }
 
+        .btn-notify {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-notify:hover {
+            background: var(--accent);
+            color: white;
+        }
+
         .brand {
-            margin-top: 40px;
-            font-size: 0.65rem;
+            margin-top: 30px;
+            font-size: 0.6rem;
             color: #6B7280;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            font-weight: 600;
-            opacity: 0.8;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -140,17 +150,17 @@
 
     <div class="container">
         <div class="card">
-            <div class="badge" id="day-badge">Calculando...</div>
-            <p id="subject-name">Iniciando sistema</p>
+            <div class="badge" id="day-badge">...</div>
+            <p id="subject-name">Cargando...</p>
             <div id="countdown">00:00</div>
-            <div class="status-label" id="status-text">Analizando horario</div>
+            <div class="status-label" id="status-text">Sincronizando</div>
 
             <div class="today-schedule">
                 <div class="today-title">Plan para hoy</div>
-                <div class="class-list" id="today-classes">
-                    <!-- Las clases se cargarán aquí -->
-                </div>
+                <div class="class-list" id="today-classes"></div>
             </div>
+
+            <button class="btn-notify" onclick="requestNotify()">🔔 Probar Notificaciones</button>
         </div>
         
         <div class="brand">Engineered by Nobody</div>
@@ -180,86 +190,90 @@
             dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
         };
 
-        function initScheduleDisplay(day) {
-            const container = document.getElementById('today-classes');
-            container.innerHTML = '';
-            const lessons = scheduleData.days[day] || [];
-            
-            if (lessons.length === 0) {
-                container.innerHTML = '<span class="class-tag">¡Día libre!</span>';
-                return;
-            }
+        let notificationSent = false;
 
-            lessons.forEach(subject => {
-                if (subject) {
-                    const span = document.createElement('span');
-                    span.className = 'class-tag';
-                    span.id = `tag-${subject}`;
-                    span.innerText = subject;
-                    container.appendChild(span);
+        function requestNotify() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification("¡Sistema Activo!", { body: "Recibirás un aviso 5 min antes del timbre." });
                 }
             });
         }
 
-        function updateApp() {
+        function sendSmartNotify(mins, subject) {
+            if (Notification.permission === "granted" && mins === 5 && !notificationSent) {
+                const n = new Notification("¡Solo quedan 5 minutos!", {
+                    body: `La clase de ${subject} está terminando. Haz clic para ver el tiempo.`,
+                    icon: "https://cdn-icons-png.flaticon.com"
+                });
+                n.onclick = () => { window.focus(); n.close(); };
+                notificationSent = true;
+            }
+            if (mins !== 5) notificationSent = false;
+        }
+
+        function initDailyPlan(day) {
+            const list = document.getElementById('today-classes');
+            list.innerHTML = '';
+            const lessons = scheduleData.days[day] || [];
+            lessons.forEach(sub => {
+                if (sub) {
+                    const s = document.createElement('span');
+                    s.className = 'class-tag';
+                    s.id = `tag-${sub}`;
+                    s.innerText = sub;
+                    list.appendChild(s);
+                }
+            });
+        }
+
+        function update() {
             const now = new Date();
             const day = now.getDay();
-            const h = now.getHours();
-            const m = now.getMinutes();
-            const s = now.getSeconds();
-            const currentTimeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+            const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+            const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
             
             document.getElementById('day-badge').innerText = scheduleData.dayNames[day];
 
             let found = false;
-            let currentSubjectName = "";
-
             if (day >= 1 && day <= 5) {
                 const todayLessons = scheduleData.days[day] || [];
-                let classCounter = 0;
+                let cCount = 0;
 
                 for (const slot of scheduleData.slots) {
-                    if (currentTimeStr >= slot.start && currentTimeStr < slot.end) {
-                        currentSubjectName = slot.type === "recreo" ? slot.name : (todayLessons[classCounter] || "Clase");
+                    if (timeStr >= slot.start && timeStr < slot.end) {
+                        const name = slot.type === "recreo" ? slot.name : (todayLessons[cCount] || "Clase");
+                        document.getElementById('subject-name').innerText = name;
                         
-                        document.getElementById('subject-name').innerText = currentSubjectName;
+                        const [eH, eM] = slot.end.split(':').map(Number);
+                        const diff = ((eH * 3600) + (eM * 60)) - ((h * 3600) + (m * 60) + s);
                         
-                        const [endH, endM] = slot.end.split(':').map(Number);
-                        const totalDiffSeconds = ((endH * 3600) + (endM * 60)) - ((h * 3600) + (m * 60) + s);
+                        const minsLeft = Math.floor(diff / 60);
+                        document.getElementById('countdown').innerText = `${minsLeft}:${(diff % 60).toString().padStart(2, '0')}`;
+                        document.getElementById('status-text').innerText = "tiempo restante";
                         
-                        const mins = Math.floor(totalDiffSeconds / 60);
-                        const secs = totalDiffSeconds % 60;
-                        
-                        document.getElementById('countdown').innerText = `${mins}:${secs.toString().padStart(2, '0')}`;
-                        document.getElementById('status-text').innerText = slot.type === "recreo" ? "para volver a clase" : "para el timbre";
-                        
-                        // Resaltar clase actual en la lista
-                        document.querySelectorAll('.class-tag').forEach(el => el.classList.remove('active'));
-                        const activeTag = document.getElementById(`tag-${currentSubjectName}`);
+                        sendSmartNotify(minsLeft, name);
+
+                        document.querySelectorAll('.class-tag').forEach(t => t.classList.remove('active'));
+                        const activeTag = document.getElementById(`tag-${name}`);
                         if (activeTag) activeTag.classList.add('active');
 
-                        found = true;
-                        break;
+                        found = true; break;
                     }
-                    if (slot.type === "class") classCounter++;
+                    if (slot.type === "class") cCount++;
                 }
             }
 
             if (!found) {
-                document.getElementById('subject-name').innerText = "Fuera de horario";
+                document.getElementById('subject-name').innerText = "Fuera de Servicio";
                 document.getElementById('countdown').innerText = "--:--";
-                document.getElementById('status-text').innerText = "Disfruta de tu descanso";
-                document.querySelectorAll('.class-tag').forEach(el => el.classList.remove('active'));
+                document.getElementById('status-text').innerText = "Disfruta tu tiempo libre";
             }
         }
 
-        // Iniciar lista de clases al cargar
-        const startDay = new Date().getDay();
-        initScheduleDisplay(startDay);
-
-        // Actualizar cada segundo
-        setInterval(updateApp, 1000);
-        updateApp();
+        initDailyPlan(new Date().getDay());
+        setInterval(update, 1000);
+        update();
     </script>
 </body>
 </html>
