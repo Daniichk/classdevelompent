@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORE TECH | Vibe-Coding Initiative</title>
+    <title>CORE TECH | Vibe-Coding Elite</title>
     <style>
         @import url('https://fonts.googleapis.com');
 
         :root {
-            --bg: #000000;
-            --accent: #ffffff;
-            --secondary: #666666;
-            --gold: linear-gradient(90deg, #ffd700, #ff8c00);
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #0071e3;
+            --liquid-bg: linear-gradient(135deg, #000000 0%, #001a33 100%);
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--accent);
+            background: var(--liquid-bg);
+            color: #fff;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Navigation */
+        /* Liquid Background Animation */
+        .blob {
+            position: fixed;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px);
+            z-index: -1;
+            transition: 0.2s ease-out;
+        }
+
         nav {
-            padding: 30px 5%;
+            padding: 30px 10%;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 90%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
+            position: fixed; width: 80%; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
         }
-
-        .logo { font-weight: 900; font-size: 1.2rem; letter-spacing: -1px; }
-        .nav-links { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--secondary); }
 
         /* Hero Section */
         header {
@@ -47,156 +51,156 @@
             flex-direction: column;
             justify-content: center;
             padding: 0 10%;
-        }
-
-        .manifesto {
-            font-size: 0.9rem;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 20px;
+            perspective: 1000px;
         }
 
         h1 {
-            font-size: 6rem;
+            font-size: 8rem;
             font-weight: 900;
             margin: 0;
-            line-height: 0.9;
-            letter-spacing: -4px;
-            background: linear-gradient(to bottom, #fff 40%, #444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -6px;
+            line-height: 0.8;
+            opacity: 0;
+            transform: translateZ(-100px) rotateX(20deg);
+            transition: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .vibe-callout {
-            margin-top: 30px;
-            font-size: 1.5rem;
-            font-weight: 300;
-            max-width: 700px;
-            color: var(--secondary);
-        }
-
-        .vibe-callout b { color: #fff; }
-
-        /* Section: Philosophy */
-        section { padding: 100px 10%; border-top: 1px solid #222; }
-
-        .rules-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            background: #222;
-            border: 1px solid #222;
-        }
-
-        .rule-card {
-            background: var(--bg);
-            padding: 50px 30px;
-        }
-
-        .rule-num { font-size: 0.8rem; color: var(--secondary); margin-bottom: 20px; }
-        .rule-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
-
-        /* Recognition / Fortune 500 Prize */
-        .achievement-box {
-            margin-top: 100px;
-            padding: 80px;
+        .liquid-card {
             background: var(--glass);
-            border: 1px solid #333;
-            text-align: center;
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: 0.5s;
         }
 
-        .cert-title {
-            font-size: 3rem;
-            font-weight: 900;
-            background: var(--gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        .liquid-card:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.01); }
+
+        /* Terminal Form */
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            box-sizing: border-box;
+            resize: none;
+            margin-top: 20px;
         }
 
-        .btn-black {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 20px 50px;
+        .deploy-btn {
             background: #fff;
             color: #000;
-            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 50px;
             font-weight: 900;
-            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-black:hover { filter: invert(1); }
+        .deploy-btn:hover { background: var(--accent); color: #fff; box-shadow: 0 0 30px rgba(0, 113, 227, 0.5); }
 
-        footer { padding: 50px 10%; font-size: 0.7rem; color: #444; text-transform: uppercase; }
+        /* Status Animations */
+        #status { display: none; margin-top: 20px; font-size: 0.8rem; color: var(--accent); }
+        .scanning { animation: pulse 1.5s infinite; }
 
-        /* Animation */
-        .glow {
-            position: absolute;
-            top: 20%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0,98,255,0.15) 0%, rgba(0,0,0,0) 70%);
-            z-index: -1;
-        }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+        .revealed { opacity: 1 !important; transform: translateZ(0) rotateX(0) !important; }
     </style>
 </head>
 <body>
 
-<div class="glow"></div>
+<div id="blob" class="blob"></div>
 
 <nav>
-    <div class="logo">CORE TECH</div>
-    <div class="nav-links">Mon — Tue // Innovation Sprint</div>
+    <div style="font-weight: 900; letter-spacing: -1px;">CORE TECH / VIBE</div>
+    <div style="font-size: 0.7rem; opacity: 0.6;">LEAD: BEST CODER IN SCHOOL</div>
 </nav>
 
 <header>
-    <div class="manifesto">The Judge's Manifesto</div>
-    <h1>Vibe-Code<br>Everything.</h1>
-    <p class="vibe-callout">
-        We don't "use" AI. We <b>vibe-code</b> with it. In this hackathon, AI is your logic engine, but your soul is the architect. Lead the machine, don't follow it.
+    <div style="color: var(--accent); font-weight: 700; letter-spacing: 5px; margin-bottom: 20px;">VIBE-CODE PROTOCOL</div>
+    <h1 id="title">EXECUTE<br>IDEAS.</h1>
+    <p style="max-width: 600px; color: #888; font-size: 1.2rem; margin-top: 30px;">
+        Fortune 500 standards. AI-integrated workflow. This is not a competition; it is a <b>digital evolution</b>.
     </p>
 </header>
 
-<section>
-    <div class="rules-grid">
-        <div class="rule-card">
-            <div class="rule-num">01 / ENGAGEMENT</div>
-            <div class="rule-title">Vibe-coding > Copy-pasting.</div>
-            <p style="color: var(--secondary)">AI-generated code must be understood, refactored, and vibed into your specific architecture.</p>
-        </div>
-        <div class="rule-card">
-            <div class="rule-num 02 / PROTOCOL">02 / STEALTH</div>
-            <div class="rule-title">Encrypted Presence.</div>
-            <p style="color: var(--secondary)">All builds must bypass administrative filters. Base64 encoding is the standard protocol for deployment.</p>
-        </div>
-        <div class="rule-card">
-            <div class="rule-num">03 / TIMELINE</div>
-            <div class="rule-title">48H Sprint.</div>
-            <p style="color: var(--secondary)">From Monday sunrise to Tuesday sunset. No excuses. Only deployment.</p>
-        </div>
-    </div>
-</section>
-
-<section style="text-align: center;">
-    <div class="manifesto">Recognition of Excellence</div>
-    <div class="achievement-box">
-        <div class="cert-title">ELITE ENGINEER</div>
-        <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; color: var(--secondary);">
-            The top-tier performers will be awarded the <b>CORE TECH Achievement Certificate</b>. This is not a paper; it's a proof of concept that you are the best coder in the environment.
-        </p>
-        <a href="#" class="btn-black">Request Credentials</a>
+<section style="padding: 0 10% 100px;">
+    <div class="liquid-card">
+        <h2 style="font-size: 2.5rem; margin-top: 0;">Deployment Terminal</h2>
+        <p style="color: #666;">Paste your source code below. Our system will package it and open a secure bridge to the Chief Architect for testing.</p>
+        
+        <textarea id="code-input" placeholder="// Vibe your code here..."></textarea>
+        
+        <div id="status">INITIALIZING SECURE HANDSHAKE...</div>
+        
+        <button class="deploy-btn" onclick="deployProject()">
+            <span>Deploy to Architect</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
     </div>
 </section>
 
 <footer>
-    Designed for the elite. Lead Organizer & Chief Architect: The Best Coder in School.
-    <br>© 2024 CORE TECH INDUSTRIES. ALL RIGHTS RESERVED.
+    <div style="padding: 50px 10%; border-top: 1px solid var(--border); font-size: 0.7rem; color: #444;">
+        &copy; 2024 CORE TECH INDUSTRIES. ALL RIGHTS RESERVED. <br>
+        SENT TO: DANIIL.DERZHAKOV@ALU.ESCUELASSJ.COM
+    </div>
 </footer>
+
+<script>
+    const blob = document.getElementById('blob');
+    const title = document.getElementById('title');
+    const status = document.getElementById('status');
+
+    // Mouse Tracking Liquid Effect
+    window.addEventListener('mousemove', (e) => {
+        blob.style.left = e.clientX - 250 + 'px';
+        blob.style.top = e.clientY - 250 + 'px';
+    });
+
+    // Reveal animations
+    window.onload = () => {
+        title.classList.add('revealed');
+    };
+
+    function deployProject() {
+        const code = document.getElementById('code-input').value;
+        if (!code) return alert("Terminal empty. Enter code to deploy.");
+
+        status.style.display = 'block';
+        status.classList.add('scanning');
+
+        // Эффект "обработки" перед отправкой
+        setTimeout(() => {
+            const email = "daniil.derzhakov@alu.escuelassj.com";
+            const subject = encodeURIComponent("HACKATHON DEPLOYMENT: Project Submission");
+            
+            // Кодируем код в Base64 для "чистой" передачи в письме
+            const base64Code = btoa(unescape(encodeURIComponent(code)));
+            const body = encodeURIComponent("CHIEF ARCHITECT,\n\nProject deployment attached in Base64 format below. Ready for testing.\n\nDEPLOYMENT ID: " + Math.random().toString(36).substr(2, 9).toUpperCase() + "\n\nDATA:\n" + base64Code);
+            
+            const mailtoUrl = `https://mail.google.com{email}&su=${subject}&body=${body}`;
+            
+            window.open(mailtoUrl, '_blank');
+            status.innerHTML = "BRIDGE OPENED. CHECK GMAIL TAB.";
+            status.classList.remove('scanning');
+        }, 1500);
+    }
+</script>
 
 </body>
 </html>
