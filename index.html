@@ -6,82 +6,133 @@
     <title>School Flow | Enterprise Edition</title>
     <style>
         :root {
-            --bg: #F8F9FB; /* Светлый корпоративный фон */
-            --accent: #4F46E5; /* Индиго (как у Stripe/Apple) */
+            --accent: #4F46E5; /* Indigo Premium */
             --text-primary: #111827;
             --text-secondary: #6B7280;
-            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.7);
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-primary);
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            overflow: hidden;
             -webkit-font-smoothing: antialiased;
+            
+            /* Gradiente Animado Estilo Stripe */
+            background: linear-gradient(-45deg, #EEF2FF, #E0E7FF, #C7D2FE, #DBEAFE);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
-            text-align: center;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             padding: 20px;
+            text-align: center;
+            z-index: 10;
         }
 
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px); /* Эффект стекла */
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 32px;
-            padding: 50px 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
         }
 
         .badge {
             display: inline-block;
-            padding: 6px 12px;
+            padding: 6px 14px;
             background: rgba(79, 70, 229, 0.1);
             color: var(--accent);
             border-radius: 100px;
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.05em;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-transform: uppercase;
         }
 
         #subject-name {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
             color: var(--text-primary);
         }
 
         #countdown {
-            font-size: 6rem;
+            font-size: 5.5rem;
             font-weight: 800;
             letter-spacing: -0.04em;
             margin: 10px 0;
             color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
         }
 
         .status-label {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            font-weight: 400;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        /* Sección de Clases de Hoy */
+        .today-schedule {
+            text-align: left;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 20px;
+        }
+
+        .today-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .class-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .class-tag {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            background: rgba(0,0,0,0.04);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .class-tag.active {
+            background: var(--accent);
+            color: white;
         }
 
         .brand {
-            margin-top: 50px;
+            margin-top: 40px;
             font-size: 0.65rem;
-            color: #9CA3AF;
+            color: #6B7280;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 600;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -89,18 +140,24 @@
 
     <div class="container">
         <div class="card">
-            <div class="badge" id="day-badge">Lunes</div>
-            <p id="subject-name">Cargando...</p>
+            <div class="badge" id="day-badge">Calculando...</div>
+            <p id="subject-name">Iniciando sistema</p>
             <div id="countdown">00:00</div>
-            <div class="status-label" id="status-text">Analizando sistema</div>
+            <div class="status-label" id="status-text">Analizando horario</div>
+
+            <div class="today-schedule">
+                <div class="today-title">Plan para hoy</div>
+                <div class="class-list" id="today-classes">
+                    <!-- Las clases se cargarán aquí -->
+                </div>
+            </div>
         </div>
         
         <div class="brand">Engineered by Nobody</div>
     </div>
 
     <script>
-        // Код логики остается прежним, обновляем только вывод
-        const schedule = {
+        const scheduleData = {
             slots: [
                 { start: "08:20", end: "09:15", type: "class" },
                 { start: "09:15", end: "10:10", type: "class" },
@@ -120,49 +177,87 @@
                 4: ["FRAN", "MATS", "FyQ", "VAL", "INGL", "EF", "ABSR"],
                 5: ["MATS", "VAL", "FRAN", "EDPyV", "ABSR"]
             },
-            names: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+            dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
         };
+
+        function initScheduleDisplay(day) {
+            const container = document.getElementById('today-classes');
+            container.innerHTML = '';
+            const lessons = scheduleData.days[day] || [];
+            
+            if (lessons.length === 0) {
+                container.innerHTML = '<span class="class-tag">¡Día libre!</span>';
+                return;
+            }
+
+            lessons.forEach(subject => {
+                if (subject) {
+                    const span = document.createElement('span');
+                    span.className = 'class-tag';
+                    span.id = `tag-${subject}`;
+                    span.innerText = subject;
+                    container.appendChild(span);
+                }
+            });
+        }
 
         function updateApp() {
             const now = new Date();
             const day = now.getDay();
-            const currentH = now.getHours();
-            const currentM = now.getMinutes();
-            const timeStr = `${currentH.toString().padStart(2, '0')}:${currentM.toString().padStart(2, '0')}`;
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+            const currentTimeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
             
-            document.getElementById('day-badge').innerText = schedule.names[day];
+            document.getElementById('day-badge').innerText = scheduleData.dayNames[day];
 
             let found = false;
-            if (day >= 1 && day <= 5) {
-                const lessons = schedule.days[day] || [];
-                let cCount = 0;
+            let currentSubjectName = "";
 
-                for (const slot of schedule.slots) {
-                    if (timeStr >= slot.start && timeStr < slot.end) {
-                        const name = slot.type === "recreo" ? slot.name : (lessons[cCount] || "Clase");
-                        document.getElementById('subject-name').innerText = name;
+            if (day >= 1 && day <= 5) {
+                const todayLessons = scheduleData.days[day] || [];
+                let classCounter = 0;
+
+                for (const slot of scheduleData.slots) {
+                    if (currentTimeStr >= slot.start && currentTimeStr < slot.end) {
+                        currentSubjectName = slot.type === "recreo" ? slot.name : (todayLessons[classCounter] || "Clase");
                         
-                        const [eH, eM] = slot.end.split(':').map(Number);
-                        const diff = ((eH * 60 + eM) * 60) - ((currentH * 60 + currentM) * 60 + now.getSeconds());
+                        document.getElementById('subject-name').innerText = currentSubjectName;
                         
-                        const m = Math.floor(diff / 60);
-                        const s = diff % 60;
-                        document.getElementById('countdown').innerText = `${m}:${s.toString().padStart(2, '0')}`;
-                        document.getElementById('status-text').innerText = "tiempo restante";
+                        const [endH, endM] = slot.end.split(':').map(Number);
+                        const totalDiffSeconds = ((endH * 3600) + (endM * 60)) - ((h * 3600) + (m * 60) + s);
+                        
+                        const mins = Math.floor(totalDiffSeconds / 60);
+                        const secs = totalDiffSeconds % 60;
+                        
+                        document.getElementById('countdown').innerText = `${mins}:${secs.toString().padStart(2, '0')}`;
+                        document.getElementById('status-text').innerText = slot.type === "recreo" ? "para volver a clase" : "para el timbre";
+                        
+                        // Resaltar clase actual en la lista
+                        document.querySelectorAll('.class-tag').forEach(el => el.classList.remove('active'));
+                        const activeTag = document.getElementById(`tag-${currentSubjectName}`);
+                        if (activeTag) activeTag.classList.add('active');
+
                         found = true;
                         break;
                     }
-                    if (slot.type === "class") cCount++;
+                    if (slot.type === "class") classCounter++;
                 }
             }
 
             if (!found) {
-                document.getElementById('subject-name').innerText = "Fuera de Servicio";
+                document.getElementById('subject-name').innerText = "Fuera de horario";
                 document.getElementById('countdown').innerText = "--:--";
-                document.getElementById('status-text').innerText = "Disfruta tu tiempo libre";
+                document.getElementById('status-text').innerText = "Disfruta de tu descanso";
+                document.querySelectorAll('.class-tag').forEach(el => el.classList.remove('active'));
             }
         }
 
+        // Iniciar lista de clases al cargar
+        const startDay = new Date().getDay();
+        initScheduleDisplay(startDay);
+
+        // Actualizar cada segundo
         setInterval(updateApp, 1000);
         updateApp();
     </script>
