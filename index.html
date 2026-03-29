@@ -3,176 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Innovation Hub | Hackathon Series</title>
+    <title>CORE TECH | Vibe-Coding Initiative</title>
     <style>
+        @import url('https://fonts.googleapis.com');
+
         :root {
-            --primary: #0062ff; /* Corporate Blue */
-            --dark: #161616;
-            --light: #f4f4f4;
-            --text-main: #ffffff;
-            --text-secondary: #a8a8a8;
-            --accent: #0f62fe;
+            --bg: #000000;
+            --accent: #ffffff;
+            --secondary: #666666;
+            --gold: linear-gradient(90deg, #ffd700, #ff8c00);
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--dark);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--accent);
+            overflow-x: hidden;
         }
 
         /* Navigation */
         nav {
-            padding: 20px 10%;
+            padding: 30px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
-            background: rgba(22, 22, 22, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
+            position: fixed;
+            width: 90%;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(15px);
         }
 
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
-        .logo span { color: var(--primary); }
+        .logo { font-weight: 900; font-size: 1.2rem; letter-spacing: -1px; }
+        .nav-links { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--secondary); }
 
         /* Hero Section */
         header {
-            padding: 100px 10% 60px;
-            text-align: left;
-            background: linear-gradient(45deg, #161616 30%, #002d72 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
         }
 
-        h1 { font-size: 4rem; margin: 0; line-height: 1.1; }
-        .badge {
-            display: inline-block;
-            background: var(--primary);
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .manifesto {
+            font-size: 0.9rem;
+            color: var(--secondary);
             text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
         }
 
-        /* Content Sections */
-        section { padding: 80px 10%; }
+        h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            margin: 0;
+            line-height: 0.9;
+            letter-spacing: -4px;
+            background: linear-gradient(to bottom, #fff 40%, #444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        .grid {
+        .vibe-callout {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: 300;
+            max-width: 700px;
+            color: var(--secondary);
+        }
+
+        .vibe-callout b { color: #fff; }
+
+        /* Section: Philosophy */
+        section { padding: 100px 10%; border-top: 1px solid #222; }
+
+        .rules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: #222;
+            border: 1px solid #222;
         }
 
-        .card {
-            background: #262626;
-            padding: 30px;
-            border-left: 4px solid var(--primary);
-            transition: 0.3s;
+        .rule-card {
+            background: var(--bg);
+            padding: 50px 30px;
         }
 
-        .card:hover { transform: translateY(-5px); background: #333; }
+        .rule-num { font-size: 0.8rem; color: var(--secondary); margin-bottom: 20px; }
+        .rule-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
 
-        h2 { font-size: 2.5rem; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 10px; }
-        h3 { color: var(--primary); margin-top: 0; }
-
-        /* Rules List */
-        .rules-list { list-style: none; padding: 0; }
-        .rules-list li {
-            margin-bottom: 15px;
-            padding-left: 30px;
-            position: relative;
-        }
-        .rules-list li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-        }
-
-        /* Certificate / Prize Section */
-        .prize-box {
-            background: linear-gradient(90deg, #0062ff 0%, #00b4d8 100%);
-            padding: 40px;
-            border-radius: 4px;
-            margin-top: 40px;
-            color: white;
+        /* Recognition / Fortune 500 Prize */
+        .achievement-box {
+            margin-top: 100px;
+            padding: 80px;
+            background: var(--glass);
+            border: 1px solid #333;
             text-align: center;
         }
 
-        .btn {
+        .cert-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .btn-black {
             display: inline-block;
-            padding: 15px 35px;
-            background: white;
-            color: var(--primary);
+            margin-top: 40px;
+            padding: 20px 50px;
+            background: #fff;
+            color: #000;
             text-decoration: none;
-            font-weight: bold;
-            margin-top: 20px;
+            font-weight: 900;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             transition: 0.3s;
         }
 
-        .btn:hover { opacity: 0.9; transform: scale(1.05); }
+        .btn-black:hover { filter: invert(1); }
 
-        footer { padding: 40px 10%; text-align: center; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid #333; }
+        footer { padding: 50px 10%; font-size: 0.7rem; color: #444; text-transform: uppercase; }
+
+        /* Animation */
+        .glow {
+            position: absolute;
+            top: 20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,98,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
 
+<div class="glow"></div>
+
 <nav>
-    <div class="logo">CORE<span>TECH</span> HACKATHONS</div>
-    <div>Unofficial School Division</div>
+    <div class="logo">CORE TECH</div>
+    <div class="nav-links">Mon — Tue // Innovation Sprint</div>
 </nav>
 
 <header>
-    <div class="badge">Next Event: Monday – Tuesday</div>
-    <h1>The 48-Hour<br>Sprint Challenge.</h1>
-    <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px;">
-        Empowering the next generation of engineers to build, scale, and deploy innovative solutions using cutting-edge AI technologies.
+    <div class="manifesto">The Judge's Manifesto</div>
+    <h1>Vibe-Code<br>Everything.</h1>
+    <p class="vibe-callout">
+        We don't "use" AI. We <b>vibe-code</b> with it. In this hackathon, AI is your logic engine, but your soul is the architect. Lead the machine, don't follow it.
     </p>
 </header>
 
-<section id="rules">
-    <h2>Official Rules</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>01. AI Integration</h3>
-            <p>All projects are encouraged to utilize AI (LLMs, Computer Vision, or Generative APIs). Pure coding is great, but AI-powered solutions get bonus points.</p>
+<section>
+    <div class="rules-grid">
+        <div class="rule-card">
+            <div class="rule-num">01 / ENGAGEMENT</div>
+            <div class="rule-title">Vibe-coding > Copy-pasting.</div>
+            <p style="color: var(--secondary)">AI-generated code must be understood, refactored, and vibed into your specific architecture.</p>
         </div>
-        <div class="card">
-            <h3>02. Technical Execution</h3>
-            <p>Projects must be functional. As the lead judge, I will evaluate code cleanliness, UI/UX, and creative use of Base64/Inlining for bypass capability.</p>
+        <div class="rule-card">
+            <div class="rule-num 02 / PROTOCOL">02 / STEALTH</div>
+            <div class="rule-title">Encrypted Presence.</div>
+            <p style="color: var(--secondary)">All builds must bypass administrative filters. Base64 encoding is the standard protocol for deployment.</p>
         </div>
-        <div class="card">
-            <h3>03. Stealth Mode</h3>
-            <p>This is an unofficial study-day event. Participants must maintain academic appearance. One "Safe Tab" must be open at all times.</p>
+        <div class="rule-card">
+            <div class="rule-num">03 / TIMELINE</div>
+            <div class="rule-title">48H Sprint.</div>
+            <p style="color: var(--secondary)">From Monday sunrise to Tuesday sunset. No excuses. Only deployment.</p>
         </div>
     </div>
-    <ul class="rules-list" style="margin-top: 40px;">
-        <li>Start: Monday 09:00 AM | Final Submission: Tuesday 05:00 PM.</li>
-        <li>Team size: 1-4 members.</li>
-        <li>Originality: No pre-written full templates. All core logic must be built during the sprint.</li>
-    </ul>
 </section>
 
-<section id="achievements" style="background: #1e1e1e;">
-    <h2>Recognition & Awards</h2>
-    <p>Success at CoreTech Hackathons is a symbol of technical excellence.</p>
-    
-    <div class="prize-box">
-        <h3>Certified Innovation Engineer</h3>
-        <p>Winners receive a Digital Certificate of Achievement signed by the Lead Organizer (School's Top Coder). This credential validates your skills in rapid prototyping, AI implementation, and problem-solving.</p>
-        <div style="font-style: italic; margin: 15px 0;">"The highest honor for those who outcode the filters."</div>
-        <a href="#" class="btn">VIEW SAMPLE CERTIFICATE</a>
+<section style="text-align: center;">
+    <div class="manifesto">Recognition of Excellence</div>
+    <div class="achievement-box">
+        <div class="cert-title">ELITE ENGINEER</div>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; color: var(--secondary);">
+            The top-tier performers will be awarded the <b>CORE TECH Achievement Certificate</b>. This is not a paper; it's a proof of concept that you are the best coder in the environment.
+        </p>
+        <a href="#" class="btn-black">Request Credentials</a>
     </div>
 </section>
 
 <footer>
-    &copy; 2024 CoreTech Hackathon Initiative. This event is student-led and not affiliated with official school administration. 
-    <br>Built for developers, by developers.
+    Designed for the elite. Lead Organizer & Chief Architect: The Best Coder in School.
+    <br>© 2024 CORE TECH INDUSTRIES. ALL RIGHTS RESERVED.
 </footer>
 
 </body>
