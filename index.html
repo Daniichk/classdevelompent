@@ -1,176 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLASS.DEV | Digital Engineering & Project Lab</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>School Flow | by Nobody</title>
     <style>
         :root {
-            --bg: #000000;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #3b82f6;
-            --text: #ffffff;
+            --bg: #F2F2F7;
+            --card: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sec: #8E8E93;
+            --accent: #007AFF; /* Azul iOS */
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-
-        /* PRELOADER */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.8s ease;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
         }
-        .loader-text { font-weight: 800; letter-spacing: 12px; font-size: 1rem; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-
-        /* LIQUID BG */
-        .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(100px); opacity: 0.4; }
-        .blob { position: absolute; width: 600px; height: 600px; background: #1e40af; border-radius: 50%; animation: move 20s infinite alternate; }
-        .blob.two { background: #581c87; right: -10%; top: 20%; animation-duration: 15s; }
-        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(20%, 20%); } }
-
-        /* NAV */
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 25px 50px;
-            backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border);
-            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+        .card {
+            background: var(--card);
+            padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            width: 85%;
+            max-width: 380px;
+            text-align: center;
+            transition: transform 0.3s ease;
         }
-        .logo { font-weight: 800; letter-spacing: 2px; }
-
-        /* HERO */
-        header { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 20px; line-height: 1; }
-        .subtitle { color: #888; max-width: 600px; font-size: 1.1rem; margin-bottom: 40px; }
-
-        /* CONTENT */
-        .container { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-
-        .glass-card {
-            background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
-            padding: 40px; border-radius: 24px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        #subject-name {
+            color: var(--text-sec);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
         }
-        .glass-card:hover { transform: translateY(-10px); border-color: var(--accent); background: rgba(255,255,255,0.06); }
-        
-        .tag { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: block; font-weight: 800; }
-        h3 { font-size: 1.8rem; margin-bottom: 15px; }
-        p { color: #71717a; line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem; }
-
-        /* BUTTONS */
-        .btn-main {
-            padding: 14px 28px; background: #fff; color: #000; text-decoration: none;
-            border-radius: 12px; font-weight: 800; font-size: 0.85rem; display: inline-block; transition: 0.3s;
+        #countdown {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
         }
-        .btn-main:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
-
-        /* CONNECT SECTION */
-        .connect-section {
-            margin-top: 100px; padding: 60px; border-radius: 30px;
-            background: linear-gradient(to right, rgba(59,130,246,0.1), transparent);
-            border: 1px solid var(--glass-border); text-align: center;
+        .status-label {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1rem;
         }
-        .connect-btn {
-            margin-top: 25px; padding: 18px 40px; background: var(--accent); color: white;
-            border-radius: 100px; text-decoration: none; font-weight: 800; display: inline-block;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); transition: 0.3s;
+        .footer-note {
+            margin-top: 40px;
+            font-size: 0.7rem;
+            color: #D1D1D6;
+            letter-spacing: 1px;
         }
-        .connect-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5); }
-
-        footer { text-align: center; padding: 60px; opacity: 0.3; font-size: 0.7rem; letter-spacing: 1px; }
-
     </style>
 </head>
 <body>
 
-    <!-- Vercel Analytics Hook -->
-    <script defer src="/_vercel/insights/script.js"></script>
-
-    <div id="preloader">
-        <div class="loader-text">CLASS.DEV</div>
+    <div class="card">
+        <div id="subject-name">Cargando horario...</div>
+        <div id="countdown">00:00</div>
+        <div class="status-label" id="status-text">Calculando tiempo</div>
+        
+        <div class="footer-note">BUILT BY NOBODY</div>
     </div>
-
-    <div class="liquid-bg">
-        <div class="blob"></div>
-        <div class="blob two"></div>
-    </div>
-
-    <nav>
-        <div class="logo">CLASS.DEV</div>
-        <div style="font-size: 0.7rem; opacity: 0.5; font-weight: 500;">DIGITAL SOLUTIONS LAB</div>
-    </nav>
-
-    <header>
-        <span class="tag" style="color: #fff; opacity: 0.5;">Advanced Project Portfolio</span>
-        <h1>Engineering for<br>Students.</h1>
-        <p class="subtitle">A specialized research and development studio focused on interactive logic, simulation modeling, and student-led software engineering.</p>
-        <a href="#projects" class="btn-main">Explore Systems</a>
-    </header>
-
-    <div class="container" id="projects">
-        <div class="grid">
-            <!-- Project 1: Llama Clicker (Stealth Title) -->
-            <div class="glass-card">
-                <span class="tag">Math work</span>
-                <h3>Work about math</h3>
-                <p>An interactive resource management simulation designed to study incremental growth algorithms and user engagement loops.</p>
-                <a href="https://eyesthatdonotsee.vercel.app" class="btn-main">Open</a>
-            </div>
-
-            <!-- Project 2: Brawl (Stealth Title) -->
-            <div class="glass-card">
-                <span class="tag">English work</span>
-                <h3>Work about english</h3>
-                <p>A high-performance technical study on low-latency synchronization and real-time interactive physics in browser environments.</p>
-                <span class="btn-main" style="opacity: 0.3; cursor: not-allowed;">Under Review</span>
-            </div>
-
-            <!-- Project 3: Research -->
-            <div class="glass-card">
-                <span class="tag">Incubator</span>
-                <h3>System Architecture</h3>
-                <p>Exploring the boundaries of what is possible within restricted school networks using modern web protocols.</p>
-                <span class="btn-main" style="opacity: 0.3; cursor: not-allowed;">Coming Soon</span>
-            </div>
-        </div>
-
-        <!-- NEW: CONNECT SECTION -->
-        <div class="connect-section">
-            <span class="tag">Collaboration</span>
-            <h2>Have an Idea?</h2>
-            <p style="color: #888; margin-top: 10px;">We are always looking for new engineering challenges. Submit your project proposal below.</p>
-            <a href="mailto:daniil.derzhakov@alu.escuelass.edu.es?subject=Project%20Idea%20for%20Class.dev&body=Hi%20Class.dev%20Team,%0A%0AI%20have%20an%20idea%20for%20a%20new%20project:%0A" class="connect-btn">Connect & Submit Idea</a>
-        </div>
-    </div>
-
-    <footer>
-        © 2024 CLASS.DEV ENGINEERING UNIT // SECURE ACADEMIC INFRASTRUCTURE
-    </footer>
 
     <script>
-        // Preloader Logic
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('preloader').style.opacity = '0';
-                setTimeout(() => document.getElementById('preloader').style.display = 'none', 800);
-            }, 1200);
-        });
+        const schedule = {
+            // Basado en tu imagen enviada
+            slots: [
+                { start: "08:20", end: "09:15", type: "class" },
+                { start: "09:15", end: "10:10", type: "class" },
+                { start: "10:10", end: "10:35", type: "recreo", name: "RECREO" },
+                { start: "10:35", end: "11:30", type: "class" },
+                { start: "11:30", end: "12:25", type: "class" },
+                { start: "12:25", end: "12:35", type: "recreo", name: "RECREO" },
+                { start: "12:35", end: "13:30", type: "class" },
+                { start: "13:30", end: "15:00", type: "recreo", name: "MEDIODÍA" },
+                { start: "15:00", end: "15:55", type: "class" },
+                { start: "15:55", end: "16:50", type: "class" }
+            ],
+            days: {
+                1: ["EF", "VAL", "INGL", "FRAN", "LCyL", "TUT", "MATS"], // Lunes
+                2: ["FyQ", "EDPyV", "INGL", "MUS", "LCyL", "ABSR", "MATS"], // Martes
+                3: ["ABSR", "MUS", "FyQ", "LCyL", "INGL"], // Miércoles (solo mañana)
+                4: ["FRAN", "MATS", "FyQ", "VAL", "INGL", "EF", "ABSR"], // Jueves
+                5: ["MATS", "VAL", "FRAN", "EDPyV", "ABSR"] // Viernes
+            }
+        };
 
-        // 3D Tilt Effect
-        const cards = document.querySelectorAll('.glass-card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                card.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg) translateY(-5px)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateY(0)`;
-            });
-        });
+        function updateApp() {
+            const now = new Date();
+            const day = now.getDay(); // 1 = Lunes, 5 = Viernes
+            const currentH = now.getHours();
+            const currentM = now.getMinutes();
+            const currentTimeStr = `${currentH.toString().padStart(2, '0')}:${currentM.toString().padStart(2, '0')}`;
+            
+            let displaySubject = "LIBRE";
+            let displayTime = "00:00";
+            let displayStatus = "Fuera de horario";
+
+            if (day >= 1 && day <= 5) {
+                const todayLessons = schedule.days[day] || [];
+                let classCounter = 0;
+
+                for (const slot of schedule.slots) {
+                    if (currentTimeStr >= slot.start && currentTimeStr < slot.end) {
+                        // Estamos dentro de este bloque
+                        if (slot.type === "recreo") {
+                            displaySubject = slot.name;
+                            displayStatus = "para volver a clase";
+                        } else {
+                            displaySubject = "CLASE: " + (todayLessons[classCounter] || "S/N");
+                            displayStatus = "para el timbre";
+                        }
+
+                        // Calcular cuenta atrás
+                        const [endH, endM] = slot.end.split(':').map(Number);
+                        const endSecs = (endH * 3600) + (endM * 60);
+                        const nowSecs = (currentH * 3600) + (currentM * 60) + now.getSeconds();
+                        
+                        const diff = endSecs - nowSecs;
+                        const m = Math.floor(diff / 60);
+                        const s = diff % 60;
+                        
+                        displayTime = `${m}:${s.toString().padStart(2, '0')}`;
+                        break;
+                    }
+                    if (slot.type === "class") classCounter++;
+                }
+            }
+
+            document.getElementById('subject-name').innerText = displaySubject;
+            document.getElementById('countdown').innerText = displayTime;
+            document.getElementById('status-text').innerText = displayStatus;
+        }
+
+        setInterval(updateApp, 1000);
+        updateApp();
     </script>
 </body>
 </html>
