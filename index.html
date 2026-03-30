@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORE TECH | Vibe-Coding Elite</title>
+    <title>CORE TECH | Supreme Architect Hub</title>
     <style>
         @import url('https://fonts.googleapis.com');
 
         :root {
             --bg: #000;
             --accent: #0071e3;
+            --gold: #d4af37;
             --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
             --text-dim: #86868b;
         }
 
         body {
             margin: 0; background: var(--bg); color: #fff;
             font-family: 'Inter', sans-serif; overflow-x: hidden;
-            /* Убираем стандартный курсор для лучшего эффекта, если хочешь */
+            scroll-behavior: smooth;
         }
 
-        /* Gravity Canvas */
+        /* Gravity Canvas Background */
         #canvas-bg {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -32,7 +33,7 @@
             position: fixed; width: 600px; height: 600px;
             background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%);
             filter: blur(80px); z-index: -2; pointer-events: none;
-            transform: translate(-50%, -50%); transition: 0.1s ease-out;
+            transform: translate(-50%, -50%); transition: 0.15s ease-out;
         }
 
         nav {
@@ -48,35 +49,48 @@
 
         h1 {
             font-size: clamp(4rem, 12vw, 8.5rem); font-weight: 900; line-height: 0.85;
-            letter-spacing: -6px; margin: 0; opacity: 0; transform: translateY(80px) rotateX(-20deg);
+            letter-spacing: -6px; margin: 0; opacity: 0; transform: translateY(80px) rotateX(-15deg);
             transition: 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-            perspective: 1000px;
         }
 
+        /* Winners Board */
+        .winners-section { padding: 120px 10%; border-top: 1px solid var(--border); }
+        .winners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 60px; }
+        
+        .winner-card {
+            background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.1); 
+            padding: 40px; border-radius: 30px; text-align: center;
+            backdrop-filter: blur(40px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0; transform: scale(0.9);
+        }
+        .winner-card:hover { transform: scale(1.05); border-color: var(--gold); box-shadow: 0 0 40px rgba(212, 175, 55, 0.1); }
+        .winner-rank { font-size: 0.7rem; color: var(--gold); letter-spacing: 4px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+
+        /* Rules Matrix */
         .matrix-section { padding: 120px 10%; border-top: 1px solid var(--border); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 60px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 60px; }
         
         .card {
-            background: var(--glass); border: 1px solid var(--border); padding: 50px 40px;
+            background: var(--glass); border: 1px solid var(--border); padding: 60px 40px;
             border-radius: 40px; backdrop-filter: blur(40px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            opacity: 0; transform: translateY(40px);
+            opacity: 0; transform: translateY(50px);
         }
-        .card:hover { transform: scale(1.05) translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        
-        .action-section { text-align: center; padding: 150px 10%; background: transparent; }
+        .card:hover { transform: translateY(-15px); border-color: var(--accent); background: rgba(255,255,255,0.06); }
+        .card h3 { color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 25px; }
 
+        /* Action Portal */
+        .action-section { text-align: center; padding: 160px 10%; background: #000; }
         .deploy-trigger {
-            background: #fff; color: #000; padding: 25px 80px;
+            background: #fff; color: #000; padding: 28px 90px;
             border-radius: 100px; font-weight: 900; text-transform: uppercase;
             border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            font-size: 0.9rem; letter-spacing: 2px;
-            position: relative; overflow: hidden;
+            font-size: 1rem; letter-spacing: 2px;
         }
-        .deploy-trigger:hover { transform: scale(1.1); box-shadow: 0 0 50px rgba(0, 113, 227, 0.6); background: var(--accent); color: #fff; }
+        .deploy-trigger:hover { transform: scale(1.1); box-shadow: 0 0 60px rgba(0, 113, 227, 0.5); background: var(--accent); color: #fff; }
 
-        .revealed { opacity: 1 !important; transform: translateY(0) rotateX(0) !important; }
+        .revealed { opacity: 1 !important; transform: translateY(0) rotateX(0) scale(1) !important; }
 
-        footer { padding: 80px 10%; color: #333; font-size: 0.75rem; text-align: center; letter-spacing: 1px; }
+        footer { padding: 100px 10%; color: #222; font-size: 0.8rem; text-align: center; letter-spacing: 2px; text-transform: uppercase; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -84,60 +98,79 @@
 <canvas id="canvas-bg"></canvas>
 <div id="liquid-blob"></div>
 
-<nav id="navbar">
-    <div style="font-weight: 900; font-size: 1.1rem; letter-spacing: -1px;">CORE TECH <span style="color: var(--accent);">PRO</span></div>
-    <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.6;">Architecture Hub</div>
+<nav>
+    <div style="font-weight: 900; font-size: 1.3rem; letter-spacing: -1px;">CORE TECH <span style="font-weight: 300; opacity: 0.5;">ARCHITECT</span></div>
+    <div style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px;">JUDGE: DANIIL DERZHAKOV</div>
 </nav>
 
 <header>
-    <div style="color: var(--accent); font-weight: 700; letter-spacing: 6px; margin-bottom: 20px; opacity: 0.7;">8:20 Monday to 00:00 Tuesday</div>
-    <h1 id="hero-title">ENGINEERING<br>AUTONOMY.</h1>
-    <p id="hero-desc" style="max-width: 650px; color: var(--text-dim); font-size: 1.3rem; margin-top: 40px; opacity: 0; transition: 1s 0.6s;">
-        The elite school hackathon series. Driven by AI, governed by the Chief Architect. No teams. No shortcuts. Just pure deployment.
+    <div style="color: var(--accent); font-weight: 700; letter-spacing: 8px; margin-bottom: 20px; opacity: 0.8;">VIBE-CODE PROTOCOL</div>
+    <h1 id="hero-title">BEYOND<br>ENGINEERING.</h1>
+    <p id="hero-desc" style="max-width: 700px; color: var(--text-dim); font-size: 1.4rem; margin-top: 40px; opacity: 0;">
+        Elite individual sprints for the best coders. Powered by AI. Governed by raw logic.
     </p>
 </header>
 
+<section class="winners-section">
+    <div style="font-size: 0.8rem; color: var(--gold); font-weight: 900; letter-spacing: 3px;">LAUREATES</div>
+    <h2 style="font-size: 3.5rem; letter-spacing: -3px; margin: 10px 0;">Elite Hall of Fame</h2>
+    <div class="winners-grid">
+        <div class="winner-card reveal-item">
+            <div class="winner-rank">Lead System Architect</div>
+            <div style="font-size: 1.8rem; font-weight: 900;">Daniil D.</div>
+            <div style="color: var(--text-dim); margin-top: 10px; font-style: italic;">Founder of CORE TECH</div>
+        </div>
+        <div class="winner-card reveal-item">
+            <div class="winner-rank">Session 01 / Gold</div>
+            <div style="font-size: 1.8rem; font-weight: 900;">Project Zero</div>
+            <div style="color: var(--text-dim); margin-top: 10px;">Autonomous Sandbox</div>
+        </div>
+        <div class="winner-card reveal-item">
+            <div class="winner-rank">Session 01 / Silver</div>
+            <div style="font-size: 1.8rem; font-weight: 900;">Glass Engine</div>
+            <div style="color: var(--text-dim); margin-top: 10px;">Visual Core v2</div>
+        </div>
+    </div>
+</section>
+
 <section class="matrix-section">
-    <div style="font-size: 0.8rem; color: var(--accent); font-weight: 900; letter-spacing: 2px;">THE THREE PROTOCOLS</div>
+    <div style="font-size: 0.8rem; color: var(--accent); font-weight: 900; letter-spacing: 3px;">HACKATHON PROTOCOLS</div>
     <div class="grid">
-        <div class="card">
+        <div class="card reveal-item">
             <h3>Protocol 01</h3>
             <h2>Individual<br>Sovereignty</h2>
-            <p style="color: var(--text-dim);">This is a solo engagement</p>
+            <p style="color: var(--text-dim); line-height: 1.8;">Solo engagement only. Any unauthorized collaboration results in immediate project termination and disqualification.</p>
         </div>
-        <div class="card">
+        <div class="card reveal-item">
             <h3>Protocol 02</h3>
-            <h2>Original<br>Invention</h2>
-            <p style="color: var(--text-dim);">Avoid replication. Your logic must be unique. Even clones of existing systems must feature a "Vibe-Code" overhaul.</p>
+            <h2>Original<br>Architecture</h2>
+            <p style="color: var(--text-dim); line-height: 1.8;">Vibe-code with AI, don't just use it. No direct clones. Every mechanical loop must be uniquely reinvented.</p>
         </div>
-        <div class="card">
+        <div class="card reveal-item">
             <h3>Protocol 03</h3>
-            <h2>Single-File<br>Binary</h2>
-            <p style="color: var(--text-dim);">Final submissions must be encapsulated in one single HTML file. External dependencies are a breach of protocol.</p>
+            <h2>Single-File<br>Deployment</h2>
+            <p style="color: var(--text-dim); line-height: 1.8;">Submission must be a single .html file containing all CSS and JS. No external assets or dependencies allowed.</p>
         </div>
     </div>
 </section>
 
 <section class="action-section">
-    <div style="margin-bottom: 40px;">
-        <h2 style="font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 10px;">Submission Portal</h2>
-        <p style="color: var(--text-dim);">Ready for the Chief Architect's evaluation?</p>
-    </div>
+    <h2 style="font-size: 4rem; letter-spacing: -3px; margin-bottom: 20px;">Deploy Project</h2>
+    <p style="color: var(--text-dim); margin-bottom: 50px; font-size: 1.2rem;">Ready for the Chief Architect's final technical review?</p>
     <button class="deploy-trigger" onclick="transmitProject()">Transmit Result</button>
-    <p style="margin-top: 20px; font-size: 0.7rem; color: #444;">Bridge to: DANIIL.DERZHAKOV@ALU.ESCUELASSJ.COM</p>
 </section>
 
 <footer>
-    CORE TECH INDUSTRIES &copy; 2026. ALL RIGHTS RESERVED. <br>
-    DEVELOPED BY THE BEST CODER IN SCHOOL.
+    CORE TECH INDUSTRIES &copy; 2024. BUILT BY THE BEST CODER IN SCHOOL. <br>
+    DESTINATION: DANIIL.DERZHAKOV@ALU.ESCUELASSJ.COM
 </footer>
 
 <script>
-    // --- Gravity & Particle Engine ---
+    // --- Advanced Gravity & Particle Engine ---
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const mouse = { x: -100, y: -100 };
+    const mouse = { x: -1000, y: -1000 };
 
     window.onresize = () => {
         canvas.width = window.innerWidth;
@@ -146,50 +179,30 @@
     window.onresize();
 
     class Particle {
-        constructor() {
-            this.init();
-        }
+        constructor() { this.init(); }
         init() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.accX = 0;
-            this.accY = 0;
-            this.friction = 0.96;
+            this.size = Math.random() * 1.8 + 0.3;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
         }
         update() {
-            // Гравитация к курсору
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let dist = Math.sqrt(dx*dx + dy*dy);
-            
-            if (dist < 300) {
-                let force = (300 - dist) / 3000;
-                this.accX = dx * force;
-                this.accY = dy * force;
-            } else {
-                this.accX = 0;
-                this.accY = 0;
+            if (dist < 250) {
+                this.x -= dx * 0.015;
+                this.y -= dy * 0.015;
             }
-
-            this.vx += this.accX;
-            this.vy += this.accY;
-            this.vx *= this.friction;
-            this.vy *= this.friction;
             this.x += this.vx;
             this.y += this.vy;
-
-            // Отражение от границ
             if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
             if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
         }
         draw() {
             ctx.fillStyle = 'rgba(0, 113, 227, 0.4)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
         }
     }
 
@@ -197,61 +210,68 @@
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.update();
-            p.draw();
+        particles.forEach((p, i) => {
+            p.update(); p.draw();
+            // Network lines effect
+            for (let j = i + 1; j < particles.length; j++) {
+                let dx = p.x - particles[j].x;
+                let dy = p.y - particles[j].y;
+                let d = Math.sqrt(dx*dx + dy*dy);
+                if (d < 110) {
+                    ctx.strokeStyle = `rgba(0, 113, 227, ${0.15 - d/800})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                }
+            }
         });
         requestAnimationFrame(animate);
     }
     animate();
 
-    // --- Common Functions ---
+    // --- Interactive Logic ---
     const blob = document.getElementById('liquid-blob');
     const heroTitle = document.getElementById('hero-title');
     const heroDesc = document.getElementById('hero-desc');
 
-    window.onload = () => {
-        heroTitle.classList.add('revealed');
-        heroDesc.classList.add('revealed');
-    };
-
     window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        blob.style.left = e.clientX + 'px';
-        blob.style.top = e.clientY + 'px';
+        mouse.x = e.clientX; mouse.y = e.clientY;
+        blob.style.left = e.clientX + 'px'; blob.style.top = e.clientY + 'px';
     });
 
+    window.onload = () => {
+        heroTitle.classList.add('revealed');
+        setTimeout(() => { heroDesc.style.opacity = "1"; heroDesc.style.transform = "translateY(0)"; }, 600);
+    };
+
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('revealed');
-        });
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed'); });
     }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-item, .card, .winner-card').forEach(el => observer.observe(el));
 
-    document.querySelectorAll('.card').forEach(card => observer.observe(card));
-
+    // --- Secure Transmission Function ---
     function transmitProject() {
         const email = "daniil.derzhakov@alu.escuelassj.com";
         const subject = "HACKATHON DEPLOYMENT: Project Final Submission";
-        const body = "CHIEF ARCHITECT,\n\nI am submitting my original, single-file project for technical review.\n\nPROJECT ATTACHMENT STATUS: [Please attach your .html file to this email]\n\nSUBMITTED BY: [Enter Your Name]";
+        const body = "CHIEF ARCHITECT,\n\nI am submitting my original, single-file project for technical review.\n\n[INSTRUCTIONS: PLEASE ATTACH YOUR .HTML FILE TO THIS EMAIL]\n\nSUBMITTED BY: [Enter Your Name]";
         
         const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         
+        // Creating ghost link to bypass Chrome pop-up blockers
         const link = document.createElement('a');
         link.href = mailtoUrl;
         link.style.display = 'none';
         document.body.appendChild(link);
         
         const btn = document.querySelector('.deploy-trigger');
-        btn.style.transform = "scale(0.95)";
         btn.innerText = "OPENING GMAIL...";
+        btn.style.background = "#27c93f";
         
         setTimeout(() => {
             link.click();
             document.body.removeChild(link);
-            btn.style.transform = "scale(1)";
             btn.innerText = "TRANSMIT RESULT";
-        }, 500);
+            btn.style.background = "#fff";
+        }, 800);
     }
 </script>
 
