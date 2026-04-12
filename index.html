@@ -3,228 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORE TECH | Supreme Architecture</title>
+    <title>Academic Global Assistant</title>
+    <script src="https://tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com');
-
-        :root {
-            --bg: #000;
-            --accent: #0071e3;
-            --glass: rgba(255, 255, 255, 0.02);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0; background: var(--bg); color: #fff;
-            font-family: 'Inter', sans-serif; overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Physics & Background Layer */
-        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -2; pointer-events: none; }
-        .liquid-aura {
-            position: fixed; width: 1000px; height: 1000px;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.12) 0%, rgba(0,0,0,0) 70%);
-            filter: blur(120px); z-index: -1; pointer-events: none;
-            transform: translate(-50%, -50%); transition: 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        /* Navigation */
-        nav {
-            padding: 40px 10%; display: flex; justify-content: space-between; align-items: center;
-            position: fixed; width: 80%; top: 0; z-index: 1000;
-            border-bottom: 1px solid var(--border); backdrop-filter: blur(20px);
-        }
-
-        /* Main Scene Container */
-        #app { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0 10%; }
-
-        /* Home View */
-        .home-view { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; transition: 1s cubic-bezier(0.16, 1, 0.3, 1); }
-
-        .mission-card {
-            background: var(--glass); border: 1px solid var(--border);
-            padding: 100px 50px; border-radius: 50px; cursor: pointer;
-            backdrop-filter: blur(60px); position: relative; overflow: hidden;
-            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .mission-card:hover { transform: translateY(-20px) scale(1.02); border-color: var(--accent); background: rgba(255,255,255,0.05); }
-        .mission-card h3 { font-size: 0.8rem; letter-spacing: 5px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; }
-        .mission-card h2 { font-size: 4rem; font-weight: 900; margin: 0; letter-spacing: -4px; line-height: 0.9; }
-
-        /* Task Content Layer (HIDDEN BY DEFAULT) */
-        #task-viewer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column; justify-content: center;
-            padding: 0 15%; box-sizing: border-box; background: rgba(0,0,0,0.95);
-            z-index: 3000; opacity: 0; transition: 0.8s;
-        }
-
-        .back-trigger {
-            position: absolute; top: 50px; right: 10%; background: #fff; color: #000;
-            padding: 15px 35px; border-radius: 100px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; font-size: 0.7rem; transition: 0.3s;
-        }
-
-        .back-trigger:hover { transform: scale(1.1); filter: invert(1); }
-
-        /* Typography & Layout for Tasks */
-        .task-title { font-size: 6rem; font-weight: 900; letter-spacing: -6px; margin: 0; line-height: 0.8; }
-        .task-info { font-size: 1.4rem; color: #86868b; margin-top: 40px; max-width: 800px; line-height: 1.6; border-left: 4px solid var(--accent); padding-left: 30px; }
-        
-        .visual-placeholder {
-            width: 100%; height: 350px; background: #111; border-radius: 40px;
-            margin-top: 50px; border: 1px solid var(--border); overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 900; letter-spacing: 10px; color: #222; font-size: 3rem;
-        }
-
-        /* Animation States */
-        .fade-out { opacity: 0; transform: scale(0.9) blur(20px); pointer-events: none; }
-        .slide-in { opacity: 1 !important; display: flex !important; }
-
-        footer { position: fixed; bottom: 40px; width: 100%; text-align: center; color: #222; font-size: 0.7rem; letter-spacing: 3px; font-weight: 900; }
+        .stealth { filter: grayscale(1) contrast(0.5) opacity(0.5); pointer-events: none; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 font-sans h-screen flex flex-col" id="app">
 
-<canvas id="canvas-bg"></canvas>
-<div id="aura" class="liquid-aura"></div>
-
-<nav>
-    <div style="font-weight: 900; font-size: 1.4rem; letter-spacing: -2px;">CORE TECH <span>PRO</span></div>
-    <div style="font-size: 0.7rem; color: #444; letter-spacing: 2px;">DANIIL DERZHAKOV // CHIEF ARCHITECT</div>
-</nav>
-
-<div id="app">
-    <div class="home-view" id="home">
-        <div class="mission-card" onclick="viewTask('valenciano')">
-            <h3>Protocol 01</h3>
-            <h2>Valenciano<br>Notícia.</h2>
+    <!-- Navbar -->
+    <nav class="bg-white border-b px-6 py-3 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2">
+            <span class="text-xl">🎓</span>
+            <h1 class="font-bold text-slate-700" id="ui-title">Academic Assistant</h1>
         </div>
-        <div class="mission-card" onclick="viewTask('english')">
-            <h3>Protocol 02</h3>
-            <h2>Influencer<br>Mission.</h2>
+        <div class="flex gap-3">
+            <select id="lang-select" onchange="changeLang()" class="text-xs border rounded p-1 bg-slate-50 outline-none">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+            <button onclick="toggleStealth()" class="text-xs hover:underline text-slate-400">Panic Mode</button>
+        </div>
+    </nav>
+
+    <!-- Chat Area -->
+    <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <div class="bg-white border p-4 rounded-2xl shadow-sm max-w-[85%] text-sm text-slate-600" id="ui-welcome">
+            Hello! How can I assist with your studies today?
         </div>
     </div>
-</div>
 
-<div id="task-viewer">
-    <div class="back-trigger" onclick="closeViewer()">Return to Hub</div>
-    <div id="viewer-content"></div>
-</div>
+    <!-- Input Area -->
+    <div class="p-4 bg-white border-t">
+        <div class="max-w-3xl mx-auto flex gap-2 bg-slate-100 p-2 rounded-2xl border focus-within:border-blue-400 transition">
+            <input type="text" id="user-input" placeholder="Type your question..." 
+                   class="flex-1 bg-transparent outline-none px-3 py-2 text-sm text-slate-700">
+            <button onclick="sendMessage()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-medium hover:bg-blue-700 active:scale-95 transition shadow-md">
+                Send
+            </button>
+        </div>
+        <p class="text-[10px] text-center mt-2 text-slate-400">Powered by Llama3 Academic Research Engine</p>
+    </div>
 
-<footer>
-    CORE TECH INDUSTRIES // SYSTEM v4.0.0
-</footer>
+    <script>
+        // 1. ВСТАВЬ СВОЙ КЛЮЧ BASE64 ТУТ:
+        const b64_key = "Z3NrX3RDS3FRSWs2MmJtVXZIUG14THVuV0dkeWIzRllrNmhrTXBQVGhrRUNpN041aUlIeno0M24="; 
+        const API_KEY = atob(b64_key);
 
-<script>
-    // --- Advanced Physics Engine (Gravity & Particles) ---
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    const aura = document.getElementById('aura');
-    let particles = [];
-    const mouse = { x: -1000, y: -1000 };
-
-    window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    window.onresize();
-
-    class Particle {
-        constructor() { this.init(); }
-        init() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.size = Math.random() * 2;
-        }
-        update() {
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
-            let d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 300) {
-                this.x -= dx * 0.01;
-                this.y -= dy * 0.01;
+        const translations = {
+            en: {
+                title: "Academic Assistant",
+                welcome: "Hello! How can I assist with your studies today?",
+                placeholder: "Type your question...",
+                send: "Send"
+            },
+            es: {
+                title: "Asistente Académico",
+                welcome: "¡Hola! ¿Cómo puedo ayudarte con tus estudios hoy?",
+                placeholder: "Escribe tu pregunta...",
+                send: "Enviar"
             }
-            this.x += this.vx; this.y += this.vy;
-            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        };
+
+        function changeLang() {
+            const lang = document.getElementById('lang-select').value;
+            document.getElementById('ui-title').innerText = translations[lang].title;
+            document.getElementById('ui-welcome').innerText = translations[lang].welcome;
+            document.getElementById('user-input').placeholder = translations[lang].placeholder;
         }
-        draw() {
-            ctx.fillStyle = 'rgba(0, 113, 227, 0.4)';
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            // User Message
+            chatBox.innerHTML += `<div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] ml-auto text-sm animate-fade-in">${msg}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const res = await fetch("https://groq.com", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "llama3-8b-8192",
+                        messages: [{role: "system", content: "You are a helpful school assistant. Keep answers concise."}, {role: "user", content: msg}]
+                    })
+                });
+                const data = await response.json();
+                const aiMsg = data.choices[0].message.content;
+
+                chatBox.innerHTML += `<div class="bg-white border p-4 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-slate-700">${aiMsg}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch(e) {
+                console.error(e);
+            }
         }
-    }
 
-    for(let i=0; i<150; i++) particles.push(new Particle());
+        function toggleStealth() {
+            document.getElementById('app').classList.toggle('stealth');
+        }
 
-    function render() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(render);
-    }
-    render();
-
-    window.addEventListener('mousemove', e => {
-        mouse.x = e.clientX; mouse.y = e.clientY;
-        aura.style.left = e.clientX + 'px';
-        aura.style.top = e.clientY + 'px';
-    });
-
-    // --- Cinematic SPA Navigation ---
-    const tasks = {
-        valenciano: `
-            <div style="animation: fadeInUp 1s forwards">
-                <h2 class="task-title">Eyes that<br>do not see.</h2>
-                <div class="task-info">
-                    <b>Valenciano Reportatge:</b> Redacta la teua notícia seguint la plantilla oficial. 
-                    Titular impactant, entradeta motivadora i el cos de la notícia detallant hàbits saludables.
-                </div>
-                <div class="visual-placeholder">JOURNALISM.v01</div>
-            </div>
-        `,
-        english: `
-            <div style="animation: fadeInUp 1s forwards">
-                <h2 class="task-title">Influencer<br>Campaign.</h2>
-                <div class="task-info">
-                    <b>Mission Objective:</b> Step into the shoes of a social media leader. 
-                    Spread healthy habits, from physical well-being to mental health. Your video must inspire change.
-                </div>
-                <div class="visual-placeholder">INFLUENCE.v02</div>
-            </div>
-        `
-    };
-
-    function viewTask(id) {
-        const home = document.getElementById('home');
-        const viewer = document.getElementById('task-viewer');
-        const content = document.getElementById('viewer-content');
-
-        content.innerHTML = tasks[id];
-        home.classList.add('fade-out');
-        
-        setTimeout(() => {
-            viewer.classList.add('slide-in');
-            setTimeout(() => viewer.style.opacity = "1", 50);
-        }, 500);
-    }
-
-    function closeViewer() {
-        const home = document.getElementById('home');
-        const viewer = document.getElementById('task-viewer');
-
-        viewer.style.opacity = "0";
-        setTimeout(() => {
-            viewer.classList.remove('slide-in');
-            home.classList.remove('fade-out');
-        }, 600);
-    }
-</script>
-
-<style>
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-</style>
-
+        document.getElementById('user-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+    </script>
 </body>
 </html>
