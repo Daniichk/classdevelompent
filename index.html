@@ -3,90 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Global Assistant</title>
+    <title>Research & Language Tool</title>
     <script src="https://tailwindcss.com"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        .stealth { filter: grayscale(1) contrast(0.5) opacity(0.5); pointer-events: none; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        body { font-family: 'Inter', sans-serif; background-color: #f9f8f6; color: #323232; }
+        .claude-container { max-width: 800px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; }
+        .chat-bubble-ai { background: transparent; line-height: 1.6; border-radius: 12px; }
+        .chat-bubble-user { background: #f0eee5; border-radius: 16px; padding: 10px 16px; margin-left: auto; max-width: 85%; }
+        .input-area { background: white; border: 1px solid #e5e2da; border-radius: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .panic-mode { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; padding: 50px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+        .loading { display: flex; gap: 4px; padding: 10px; }
+        .loading span { width: 6px; height: 6px; background: #d1d1d1; border-radius: 50%; animation: blink 1.4s infinite both; }
+        .loading span:nth-child(2) { animation-delay: 0.2s; }
+        .loading span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } }
     </style>
 </head>
-<body class="bg-slate-100 font-sans h-screen flex flex-col" id="app">
+<body>
 
-    <!-- Navbar -->
-    <nav class="bg-white border-b px-6 py-3 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2">
-            <span class="text-xl">🎓</span>
-            <h1 class="font-bold text-slate-700" id="ui-title">Academic Assistant</h1>
-        </div>
-        <div class="flex gap-3">
-            <select id="lang-select" onchange="changeLang()" class="text-xs border rounded p-1 bg-slate-50 outline-none">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-            </select>
-            <button onclick="toggleStealth()" class="text-xs hover:underline text-slate-400">Panic Mode</button>
-        </div>
-    </nav>
-
-    <!-- Chat Area -->
-    <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4">
-        <div class="bg-white border p-4 rounded-2xl shadow-sm max-w-[85%] text-sm text-slate-600" id="ui-welcome">
-            Hello! How can I assist with your studies today?
-        </div>
+    <!-- Panic Screen (English Dictionary Style) -->
+    <div id="panic-screen" class="panic-mode">
+        <h1 class="text-2xl font-serif">English-Spanish Dictionary</h1>
+        <hr class="my-4">
+        <p><strong>Education (noun):</strong> the process of receiving or giving systematic instruction, especially at a school or university.</p>
+        <button onclick="exitPanic()" class="mt-10 text-gray-300 text-xs">Resume Research</button>
     </div>
 
-    <!-- Input Area -->
-    <div class="p-4 bg-white border-t">
-        <div class="max-w-3xl mx-auto flex gap-2 bg-slate-100 p-2 rounded-2xl border focus-within:border-blue-400 transition">
-            <input type="text" id="user-input" placeholder="Type your question..." 
-                   class="flex-1 bg-transparent outline-none px-3 py-2 text-sm text-slate-700">
-            <button onclick="sendMessage()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-medium hover:bg-blue-700 active:scale-95 transition shadow-md">
-                Send
-            </button>
+    <div class="claude-container" id="main-app">
+        <!-- Header -->
+        <header class="p-5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#d97757] rounded-full flex items-center justify-center text-white font-bold">A</div>
+                <span class="font-medium text-lg" id="txt-header">Academic Assistant</span>
+            </div>
+            <div class="flex gap-4">
+                <select id="lang-select" onchange="updateLang()" class="bg-transparent text-sm text-gray-500 outline-none cursor-pointer">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                </select>
+                <button onclick="goPanic()" class="text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded hover:bg-gray-50">Panic Mode (Esc)</button>
+            </div>
+        </header>
+
+        <!-- Messages -->
+        <div id="chat-box" class="flex-1 overflow-y-auto px-5 py-2 space-y-8">
+            <div class="chat-bubble-ai">
+                <p class="text-gray-800 text-lg" id="txt-welcome">How can I help you with your studies today?</p>
+            </div>
         </div>
-        <p class="text-[10px] text-center mt-2 text-slate-400">Powered by Llama3 Academic Research Engine</p>
+
+        <!-- Input Area -->
+        <div class="p-5">
+            <div class="input-area p-2">
+                <textarea id="user-input" rows="3" placeholder="Reply to Academic Assistant..." 
+                          class="w-full resize-none border-none focus:ring-0 outline-none p-2 text-[16px] text-gray-700 bg-transparent"></textarea>
+                <div class="flex justify-end p-2">
+                    <button onclick="handleSend()" id="send-btn" class="bg-[#d97757] text-white px-5 py-1.5 rounded-full font-medium hover:opacity-90 transition shadow-sm">
+                        Send
+                    </button>
+                </div>
+            </div>
+            <p class="text-center text-[11px] text-gray-400 mt-3 tracking-wide">CONFIDENTIAL ACADEMIC RESOURCE</p>
+        </div>
     </div>
 
     <script>
-        // 1. ВСТАВЬ СВОЙ КЛЮЧ BASE64 ТУТ:
-        const b64_key = "Z3NrX3RDS3FRSWs2MmJtVXZIUG14THVuV0dkeWIzRllrNmhrTXBQVGhrRUNpN041aUlIeno0M24="; 
+        // --- CONFIGURATION ---
+        const b64_key = "Z3NrX3RDS3FRSWs2MmJtVXZIUG14THVuV0dkeWIzRllrNmhrTXBQVGhrRUNpN041aUlIeno0M24="; // <--- Твой ключ Base64 здесь
         const API_KEY = atob(b64_key);
 
-        const translations = {
-            en: {
-                title: "Academic Assistant",
-                welcome: "Hello! How can I assist with your studies today?",
-                placeholder: "Type your question...",
-                send: "Send"
-            },
-            es: {
-                title: "Asistente Académico",
-                welcome: "¡Hola! ¿Cómo puedo ayudarte con tus estudios hoy?",
-                placeholder: "Escribe tu pregunta...",
-                send: "Enviar"
-            }
+        const content = {
+            en: { header: "Academic Assistant", welcome: "How can I help you today?", placeholder: "Reply to Assistant...", send: "Send" },
+            es: { header: "Asistente Académico", welcome: "¿В чем я могу помочь тебе сегодня?", placeholder: "Responder al asistente...", send: "Enviar" }
         };
 
-        function changeLang() {
-            const lang = document.getElementById('lang-select').value;
-            document.getElementById('ui-title').innerText = translations[lang].title;
-            document.getElementById('ui-welcome').innerText = translations[lang].welcome;
-            document.getElementById('user-input').placeholder = translations[lang].placeholder;
+        function updateLang() {
+            const l = document.getElementById('lang-select').value;
+            document.getElementById('txt-header').innerText = content[l].header;
+            document.getElementById('txt-welcome').innerText = content[l].welcome;
+            document.getElementById('user-input').placeholder = content[l].placeholder;
+            document.getElementById('send-btn').innerText = content[l].send;
         }
 
-        async function sendMessage() {
+        // --- CORE AI LOGIC ---
+        async function handleSend() {
             const input = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
-            const msg = input.value.trim();
-            if(!msg) return;
+            const prompt = input.value.trim();
+            
+            if(!prompt) return;
 
-            // User Message
-            chatBox.innerHTML += `<div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] ml-auto text-sm animate-fade-in">${msg}</div>`;
+            // Add User message
+            chatBox.innerHTML += `<div class="chat-bubble-user text-gray-700">${prompt}</div>`;
             input.value = '';
+            
+            // Add Loading dots
+            const loadingId = "loader-" + Date.now();
+            chatBox.innerHTML += `<div id="${loadingId}" class="loading"><span></span><span></span><span></span></div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const res = await fetch("https://groq.com", {
+                const response = await fetch("https://groq.com", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${API_KEY}`,
@@ -94,24 +113,41 @@
                     },
                     body: JSON.stringify({
                         model: "llama3-8b-8192",
-                        messages: [{role: "system", content: "You are a helpful school assistant. Keep answers concise."}, {role: "user", content: msg}]
+                        messages: [
+                            {role: "system", content: "You are a helpful, professional assistant like Claude. Give long, detailed academic answers."},
+                            {role: "user", content: prompt}
+                        ],
+                        temperature: 0.7
                     })
                 });
+
                 const data = await response.json();
-                const aiMsg = data.choices[0].message.content;
+                document.getElementById(loadingId).remove();
 
-                chatBox.innerHTML += `<div class="bg-white border p-4 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-slate-700">${aiMsg}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } catch(e) {
-                console.error(e);
+                if(data.choices && data.choices[0]) {
+                    const aiText = data.choices[0].message.content.replace(/\n/g, '<br>');
+                    chatBox.innerHTML += `<div class="chat-bubble-ai text-gray-800 py-4 border-b border-gray-100">${aiText}</div>`;
+                } else {
+                    throw new Error("API Error");
+                }
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `<div class="text-red-400 text-xs italic">System offline. Please check connection or API key.</div>`;
             }
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function toggleStealth() {
-            document.getElementById('app').classList.toggle('stealth');
-        }
-
-        document.getElementById('user-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+        // --- UTILS ---
+        function goPanic() { document.getElementById('panic-screen').style.display = 'block'; }
+        function exitPanic() { document.getElementById('panic-screen').style.display = 'none'; }
+        
+        window.addEventListener('keydown', (e) => { if(e.key === 'Escape') goPanic(); });
+        document.getElementById('user-input').addEventListener('keydown', (e) => {
+            if(e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
     </script>
 </body>
 </html>
